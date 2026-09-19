@@ -1,0 +1,496 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Tanaman Sekolah</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(-45deg, #1b5e20, #2e7d32, #388e3c, #43a047, #66bb6a);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .daun {
+      position: absolute;
+      font-size: 22px;
+      opacity: 0.25;
+      animation: jatuh linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes jatuh {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.3;
+      }
+
+      90% {
+        opacity: 0.3;
+      }
+
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    #halaman-utama {
+      width: 100%;
+      max-width: 700px;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .kartu-about {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+
+    .kartu-about h2 {
+      color: #1b5e20;
+      margin-bottom: 12px;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kartu-about p {
+      color: #444;
+      line-height: 1.7;
+      font-size: 15.5px;
+      margin-bottom: 8px;
+    }
+
+    .kartu-about strong {
+      color: #2e7d32;
+    }
+
+    .btn-galeri {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 30px auto 15px;
+      padding: 16px 40px;
+      background: #ffffff;
+      color: #1b5e20;
+      font-size: 22px;
+      font-weight: 800;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      transition: all 0.3s ease;
+    }
+
+    .btn-galeri:hover {
+      background: #ffeb3b;
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .btn-galeri.active {
+      background: #ffeb3b;
+    }
+
+    .tombol-container {
+      display: none;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-top: 10px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .tombol-container.show {
+      display: flex;
+    }
+
+    .tombol {
+      padding: 15px 28px;
+      border: none;
+      border-radius: 50px;
+      background: #ffffff;
+      color: #1b5e20;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .tombol:hover {
+      background: #ffeb3b;
+      transform: translateY(-5px) scale(1.06);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+    }
+
+    #halaman-detail {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .konten-detail {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .konten-detail img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .konten-detail h2 {
+      color: #1b5e20;
+      margin-bottom: 12px;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .konten-detail p {
+      color: #444;
+      line-height: 1.7;
+      font-size: 15.5px;
+      margin-bottom: 25px;
+    }
+
+    .btn-kembali {
+      padding: 14px 32px;
+      border: none;
+      border-radius: 50px;
+      background: #1b5e20;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-kembali:hover {
+      background: #2e7d32;
+      transform: translateY(-3px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 20px 15px;
+      }
+
+      .kartu-about {
+        padding: 20px;
+      }
+
+      .kartu-about h2 {
+        font-size: 19px;
+      }
+
+      .kartu-about p {
+        font-size: 14px;
+      }
+
+      .btn-galeri {
+        font-size: 19px;
+        padding: 14px 30px;
+      }
+
+      .tombol {
+        font-size: 15px;
+        padding: 13px 22px;
+      }
+
+      .konten-detail {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="halaman-utama">
+
+    <div class="kartu-about">
+      <h2>🏫 Tentang Sekolah</h2>
+
+      <p>
+        Selamat datang di <strong>SMP Negeri 4 Sukawati</strong>.
+        Sekolah kami berkomitmen untuk menciptakan lingkungan belajar yang asri,
+        hijau, dan ramah lingkungan. Kami percaya bahwa kecintaan terhadap alam
+        dapat membentuk karakter siswa yang peduli dan bertanggung jawab.
+      </p>
+
+      <p>
+        Salah satu program unggulan kami adalah
+        <strong>Galeri Tanaman Sekolah</strong>,
+        di mana setiap kelas merawat dan mempelajari berbagai jenis tanaman.
+      </p>
+    </div>
+
+    <div class="kartu-about">
+      <h2>👨‍🏫 Tentang Murid & Wali Kelas</h2>
+
+      <p>
+        <strong>Wali Kelas:</strong>Putu Gede Putra Eka Yaga S.Pd<br>
+        Beliau adalah wali kelas yang sangat mendukung kegiatan penghijauan sekolah.
+      </p>
+
+      <p>
+        <strong>Jumlah Murid:</strong> 29 siswa<br>
+        Seluruh siswa kelas VII-E aktif terlibat dalam merawat tanaman di lingkungan sekolah.
+        Kami belajar bersama tentang manfaat tanaman, cara merawat, dan pentingnya menjaga alam.
+      </p>
+    </div>
+
+    <button class="btn-galeri" id="btnGaleri" onclick="toggleGaleri()">
+      🌿 Galeri Tanaman
+    </button>
+
+    <div class="tombol-container" id="listTanaman">
+
+      <button class="tombol" onclick="bukaTanaman('kacaPiring')">
+        Kaca Piring
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('sandat')">
+        Bunga Sandat
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('soka')">
+        Bunga Soka
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('kana')">
+        Bunga Kana
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('sokaMerah')">
+        Bunga Soka Merah
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('lidahMertua')">
+        Lidah Mertua
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('kecubungLereng')">
+        Kecubung Lereng
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('bayamBrazil')">
+        Bayam Brazil
+      </button>
+
+      <button class="tombol" onclick="bukaTanaman('daunAfrika')">
+        Daun Afrika
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div id="halaman-detail">
+
+    <div class="konten-detail" id="isi-detail"></div>
+
+  </div>
+
+
+  <script>
+
+    const dataTanaman = {
+
+      kacaPiring: {
+        nama: "Kaca Piring / Jempiring",
+        foto: "https://imageupload.io/f/m2hPSaf1.jpg",
+        penjelasan: "Tanaman kaca piring adalah semak hijau abadi yang sangat populer karena menghasilkan bunga putih bersih yang beraroma sangat harum dan wangi. Daunnya berbentuk lonjong dengan permukaan yang hijau gelap dan mengilap. Tanaman ini menyukai lingkungan yang lembap, tanah yang agak asam dengan drainase yang baik, serta pencahayaan matahari yang cukup agar bisa berbunga secara optimal. Di beberapa daerah seperti Bali, bunga jempiring juga menjadi maskot kota dan sering digunakan dalam kegiatan adat."
+      },
+
+      sandat: {
+        nama: "Bunga Sandat / Kenanga",
+        foto: "https://imageupload.io/f/9AEOeHBj.jpg",
+        penjelasan: "Bunga sandat adalah tanaman pohon tropis asli Indonesia yang sangat melekat dengan budaya masyarakat Bali. Saat masih muda seperti pada foto, tanaman ini memiliki ciri khas daun berwarna hijau terang berbentuk bulat telur dengan urat atau tulang daun yang terlihat jelas, melengkung, dan bergelombang. Ketika mulai dewasa dan berbunga, tanaman ini menghasilkan bunga berwarna hijau kekuningan dengan kelopak yang panjang dan menjuntai. Bunga sandat memiliki aroma wangi yang sangat harum, kuat, dan khas. Keunikan utama bunga sandat adalah aromanya yang tetap harum meskipun bunganya sudah layu dan mengering. Di Bali, bunga sandat digunakan sebagai sarana upacara, perlengkapan canang sari, persembahyangan, serta hiasan rambut pada pakaian adat Bali. Bunga sandat juga memiliki makna filosofis melalui lagu daerah Bali Bungan Sandat."
+      },
+
+      soka: {
+        nama: "Bunga Soka / Asoka",
+        foto: "https://imageupload.io/f/K965cz3A.jpg",
+        penjelasan: "Tanaman ini adalah perdu hias populer yang dikenal luas di Indonesia sebagai bunga soka atau asoka. Saat masih kecil dan belum berbunga, tanaman ini memiliki susunan daun yang tumbuh sangat lebat, berbentuk lonjong atau jorong, bertekstur kaku seperti kulit, dengan permukaan yang hijau mengilap. Ketika sudah dewasa, tanaman soka menghasilkan bunga yang tumbuh bergerombol rapat membentuk bulatan seperti bola. Warnanya sangat cerah dan beragam tergantung varietasnya, seperti merah, oranye, kuning, atau merah muda. Tanaman soka sangat menyukai paparan sinar matahari penuh agar dapat merangsang pertumbuhan tunas bunga baru secara optimal sepanjang tahun."
+      },
+
+      kana: {
+        nama: "Bunga Kana / Bunga Tasbih",
+        foto: "https://imageupload.io/f/IFyb0QqR.jpg",
+        penjelasan: "Tanaman yang baru tumbuh pada gambar ini adalah tunas muda dari bunga kana. Saat baru muncul satu daun, ciri utamanya sangat mirip dengan daun pisang berukuran kecil, yaitu lebar, berbentuk lonjong meruncing di ujungnya, dan memiliki tangkai daun yang tegak serta kokoh langsung keluar dari dalam tanah. Tanaman ini tumbuh dari rimpang di bawah tanah dan dikenal sangat tangguh. Ketika sudah dewasa, tanaman kana akan tumbuh menjadi rumpun yang cukup tinggi dan menghasilkan bunga berukuran besar dengan warna-warna yang sangat mencolok seperti merah terang, kuning, atau oranye. Tanaman ini menyukai tanah yang basah atau lembap serta membutuhkan banyak sinar matahari langsung agar bisa tumbuh subur dan rajin berbunga. Di Bali dan berbagai daerah lain, bunga kana sering ditanam di taman rumah atau pembatas jalan karena perawatannya yang mudah."
+      },
+
+      sokaMerah: {
+        nama: "Bunga Soka Merah",
+        foto: "https://imageupload.io/f/BhHMBkm2.jpg",
+        penjelasan: "Tanaman pada gambar ini adalah bunga soka yang sudah mulai memunculkan kuncup bunga pertamanya. Berbeda dengan foto soka sebelumnya, tanaman soka yang satu ini sudah terlihat jelas karakteristik reproduksinya dengan adanya dompolan bunga kecil berwarna merah cerah di bagian bawah. Daunnya tumbuh rapat, berwarna hijau tua mengilap, berbentuk lonjong dengan ujung meruncing, serta memiliki tekstur yang kaku dan tebal. Bunga soka sangat menyukai tanah yang gembur serta paparan sinar matahari penuh sepanjang hari. Paparan matahari yang cukup memicu ujung-ujung rantingnya untuk terus memproduksi kelopak bunga merah yang nantinya akan mekar membentuk gerombolan bola yang indah."
+      },
+
+      lidahMertua: {
+        nama: "Lidah Mertua / Sansevieria",
+        foto: "https://imageupload.io/f/PdqNioNV.jpg",
+        penjelasan: "Tanaman yang ditanam berjejer di depan dinding batu ini adalah lidah mertua. Karakteristik utama tanaman ini adalah daunnya yang tumbuh tegak ke atas, berbentuk pedang yang kaku, tebal, dan berdaging. Daunnya memiliki corak garis-garis melintang seperti motif sisik ular dengan perpaduan warna hijau tua dan hijau muda kekuningan. Lidah mertua dikenal sebagai salah satu tanaman hias paling tangguh karena sangat tahan kekeringan dan bisa tumbuh di berbagai kondisi pencahayaan. Tanaman ini menyimpan cadangan air di dalam daun sehingga tidak membutuhkan terlalu banyak air. Di luar ruangan, tanaman ini berfungsi sebagai pembatas taman."
+      },
+
+      kecubungLereng: {
+        nama: "Kecubung Lereng / Taiwan Beauty",
+        foto: "https://imageupload.io/f/YlQGyiWF.jpg",
+        penjelasan: "Tanaman hias berukuran kecil pada gambar ini adalah perdu rendah yang tumbuh membentuk semak padat. Karakteristik utamanya adalah daunnya yang berukuran sangat kecil, halus, berbentuk lanset, dan berwarna hijau tua. Di ujung-ujung rantingnya yang rimbun, tumbuh bunga-bunga kecil mungil berwarna putih. Ada juga varietas lain yang berwarna ungu atau merah muda. Tanaman ini sangat populer digunakan sebagai tanaman penutup tanah atau pembatas taman karena pertumbuhannya yang menyebar dan rajin berbunga sepanjang tahun tanpa kenal musim. Taiwan Beauty menyukai area yang mendapatkan sinar matahari penuh agar bentuk semaknya tetap rapat dan produksi bunganya melimpah."
+      },
+
+      bayamBrazil: {
+        nama: "Bayam Brazil",
+        foto: "https://imageupload.io/f/xallt549.jpg",
+        penjelasan: "Tanaman pada gambar ini adalah jenis sayuran hias menahun yang tumbuh membentuk semak rendah dan padat. Karakteristik utamanya adalah daunnya yang tumbuh sangat lebat, berwarna hijau segar, berbentuk bulat telur sungsang, dengan permukaan daun yang cenderung berkerut, bergelombang, atau keriting. Berbeda dengan bayam biasa, bayam Brazil memiliki batang yang cenderung menjalar dan membentuk rumpun yang rimbun sehingga sering juga dimanfaatkan sebagai tanaman penutup tanah. Sayuran ini dapat dikonsumsi sebagai lalapan segar, ditumis, atau dijadikan kripik. Tanaman ini sangat mudah tumbuh, menyukai kondisi tanah yang lembap, dan menyukai paparan sinar matahari penuh hingga setengah teduh agar daunnya tetap tumbuh lebat dan subur."
+      },
+
+      daunAfrika: {
+        nama: "Daun Afrika",
+        foto: "https://imageupload.io/f/8a16E1NG.jpg",
+        penjelasan: "Tanaman perdu tegak pada gambar ini dikenal luas di Indonesia dengan nama daun afrika atau pohon afrika. Ciri fisik utamanya adalah daunnya yang tumbuh berseling, berbentuk lonjong atau bulat telur sungsang dengan ujung meruncing, berwarna hijau tua, serta memiliki tepi daun yang sedikit bergerigi halus. Batang dan rantingnya tumbuh lurus ke atas dan cenderung berkayu seiring bertambahnya usia tanaman. Di samping digunakan sebagai tanaman hijau pengisi sudut halaman, daun afrika juga dikenal sebagai tanaman herbal atau obat tradisional. Tanaman ini sangat tangguh, mudah diperbanyak dengan sistem stek batang, serta menyukai sinar matahari penuh agar pertumbuhannya cepat rimbun."
+      }
+
+    };
+
+
+    function toggleGaleri() {
+
+      const list = document.getElementById('listTanaman');
+      const btn = document.getElementById('btnGaleri');
+
+      list.classList.toggle('show');
+      btn.classList.toggle('active');
+
+    }
+
+
+    function bukaTanaman(id) {
+
+      const tanaman = dataTanaman[id];
+
+      const detail = document.getElementById('isi-detail');
+
+      detail.innerHTML = `
+        <img src="${tanaman.foto}" alt="${tanaman.nama}">
+        <h2>${tanaman.nama}</h2>
+        <p>${tanaman.penjelasan}</p>
+        <button class="btn-kembali" onclick="kembali()">
+          ← Kembali ke Galeri
+        </button>
+      `;
+
+      document.getElementById('halaman-utama').style.display = 'none';
+      document.getElementById('halaman-detail').style.display = 'block';
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+    }
+
+
+    function kembali() {
+
+      document.getElementById('halaman-detail').style.display = 'none';
+      document.getElementById('halaman-utama').style.display = 'block';
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+    }
+
+
+    function buatDaun() {
+
+      const daun = document.createElement('div');
+
+      daun.classList.add('daun');
+
+      daun.innerHTML = ['🍃', '🌿', '🍂', '☘️'][
+        Math.floor(Math.random() * 4)
+      ];
+
+      daun.style.left = Math.random() * 100 + 'vw';
+
+      daun.style.animationDuration =
+        (Math.random() * 8 + 7) + 's';
+
+      daun.style.fontSize =
+        (Math.random() * 18 + 16) + 'px';
+
+      document.body.appendChild(daun);
+
+      setTimeout(() => daun.remove(), 15000);
+
+    }
+
+
+    setInterval(buatDaun, 600);
+
+  </script>
+
+</body>
+</html>
